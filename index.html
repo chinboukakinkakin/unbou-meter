@@ -75,6 +75,7 @@ button{
   font-weight:900;
   color:#205e49;
   margin:10px;
+  overflow-wrap:anywhere;
 }
 
 .stats{
@@ -97,6 +98,45 @@ button{
   margin-top:5px;
   font-size:16px;
   overflow-wrap:anywhere;
+}
+
+.conversion{
+  margin-top:18px;
+  padding:16px;
+  background:white;
+  border-radius:12px;
+  text-align:left;
+}
+
+.conversion-item{
+  margin-top:14px;
+}
+
+.conversion-item:first-child{
+  margin-top:0;
+}
+
+.conversion-item b{
+  display:block;
+  font-size:22px;
+  color:#205e49;
+  margin-top:4px;
+  overflow-wrap:anywhere;
+}
+
+.rank{
+  text-align:center;
+  background:#fff4d8;
+  border-radius:12px;
+  padding:16px;
+  margin-top:16px;
+}
+
+.rank b{
+  display:block;
+  font-size:25px;
+  color:#8a5a00;
+  margin-top:6px;
 }
 
 .note{
@@ -132,7 +172,7 @@ button{
 
 <label>③ それ以前の排便頻度</label>
 <select id="before">
-<option value="0.33">3日に1回（週約2.3回）</option>
+<option value="0.333333">3日に1回（週約2.3回）</option>
 <option value="0.5">2日に1回（週約3.5回）</option>
 <option value="1" selected>1日1回（週7回）</option>
 <option value="2">1日2回（週14回）</option>
@@ -165,6 +205,7 @@ button{
 <button onclick="calculate()">累計うんぼう量を計算‼️</button>
 
 <div class="result">
+
 <div>あなたの人生累計排出量</div>
 
 <div id="total">約 2.98 トン</div>
@@ -172,6 +213,7 @@ button{
 <div id="range">参考幅を計算中</div>
 
 <div class="stats">
+
 <div class="stat">
 推定排便回数
 <b id="count">約14,910回</b>
@@ -181,7 +223,28 @@ button{
 年間排出量
 <b id="year">約1.10トン</b>
 </div>
+
 </div>
+
+<div class="conversion">
+
+<div class="conversion-item">
+🍌 バナナ換算
+<b id="banana">約29,800本分</b>
+</div>
+
+<div class="conversion-item">
+🐘 ゾウ換算
+<b id="elephant">約0.60頭分</b>
+</div>
+
+</div>
+
+<div class="rank">
+🏆 あなたのうんぼう称号
+<b id="title">快便ルーキー</b>
+</div>
+
 </div>
 
 <button onclick="shareResult()" style="background:#34495e">
@@ -189,24 +252,25 @@ button{
 </button>
 
 <p class="note">
-※遊び用の概算です。排便回数や重量には個人差があります。実際の測定値ではありません。バナナ換算も重量のイメージです。腹痛や頻繁な下痢などが続く場合は医療機関に相談してください。
+※遊び用の概算です。排便回数や重量には個人差があります。実際の測定値ではありません。バナナ換算は1本100g、ゾウ換算は1頭5トンとして計算しています。腹痛や頻繁な下痢などが続く場合は医療機関に相談してください。
 </p>
 
 </main>
 
 <script>
+
 function calculate(){
 
  const ageInput=Number(document.getElementById('age').value);
  const startInput=Number(document.getElementById('start').value);
 
- if(!ageInput || ageInput<1 || ageInput>120){
-   alert('現在の年齢を1〜120歳で入力してね！');
+ if(!Number.isFinite(ageInput)||ageInput<1||ageInput>120||!Number.isInteger(ageInput)){
+   alert('現在の年齢を1〜120歳の整数で入力してね！');
    return;
  }
 
- if(startInput<0 || startInput>ageInput){
-   alert('今のペースになった年齢は、現在の年齢以下で入力してね！');
+ if(!Number.isFinite(startInput)||startInput<0||startInput>ageInput||!Number.isInteger(startInput)){
+   alert('今のペースになった年齢は、0歳〜現在の年齢で入力してね！');
    return;
  }
 
@@ -226,41 +290,75 @@ function calculate(){
  const low=count*150/1000000;
  const high=count*250/1000000;
 
+ // 累計排出量
  document.getElementById('total').textContent=
    '約 '+total.toFixed(2)+' トン';
 
+ // 参考幅
  document.getElementById('range').textContent=
    '参考幅（1回150〜250gの場合）：'+
    low.toFixed(2)+'〜'+high.toFixed(2)+'トン';
 
+ // 排便回数
  document.getElementById('count').textContent=
    '約'+Math.round(count).toLocaleString()+'回';
 
+ // 年間排出量
  document.getElementById('year').textContent=
    '約'+(after*grams*365.25/1000000).toFixed(2)+'トン';
+
+ // バナナ換算（1本100g）
+ const bananaCount=Math.round(total*1000000/100);
+
+ document.getElementById('banana').textContent=
+   '約'+bananaCount.toLocaleString()+'本分';
+
+ // ゾウ換算（1頭5トン）
+ document.getElementById('elephant').textContent=
+   '約'+(total/5).toFixed(2)+'頭分';
+
+ // 称号
+ let rank='うんぼう見習い';
+
+ if(total>=10){
+   rank='人類の至宝';
+ }else if(total>=5){
+   rank='うんぼうレジェンド';
+ }else if(total>=3){
+   rank='排出マスター';
+ }else if(total>=1){
+   rank='快便ルーキー';
+ }
+
+ document.getElementById('title').textContent=rank;
 }
 
 function shareResult(){
 
  const text=
-   'うんぼう累計メーターで計算したら、人生累計 '+
-   document.getElementById('total').textContent+
-   ' だった‼️💩';
+   '💩 うんぼう累計メーター 💩\n\n'+
+   '人生累計排出量：'+document.getElementById('total').textContent+'\n'+
+   '🍌 '+document.getElementById('banana').textContent+'\n'+
+   '🐘 '+document.getElementById('elephant').textContent+'\n'+
+   '🏆 称号：'+document.getElementById('title').textContent+'\n\n'+
+   'あなたも人生のうんぼう量を計算してみよう！';
 
  if(navigator.share){
    navigator.share({
-     title:'うんぼう累計メーター',
+     title:'うんぼう累計メーター💩',
      text:text
    }).catch(()=>{});
  }else if(navigator.clipboard){
    navigator.clipboard.writeText(text)
-   .then(()=>alert('コピーしました！'));
+   .then(()=>alert('コピーしました！'))
+   .catch(()=>alert(text));
  }else{
    alert(text);
  }
 }
 
 calculate();
+
 </script>
 
 </body>
