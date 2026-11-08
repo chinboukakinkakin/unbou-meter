@@ -3,363 +3,414 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>うんぼう累計メーター 💩</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💩 うんぼう累計メーター</title>
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  padding:20px;
-  background:#f4f1e9;
-  color:#263238;
-  font-family:system-ui,sans-serif;
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px 16px 40px;
+  background: #f7f4ed;
+  color: #332b22;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
 }
-
-main{
-  max-width:600px;
-  margin:auto;
-  background:#fffdf8;
-  padding:24px;
-  border-radius:22px;
+.container {
+  max-width: 520px;
+  margin: auto;
 }
-
-h1{text-align:center;font-size:27px}
-p{line-height:1.7}
-
-label{
-  display:block;
-  font-weight:bold;
-  margin:20px 0 7px;
+h1 {
+  text-align: center;
+  font-size: 27px;
+  margin: 8px 0;
 }
-
-input,select{
-  width:100%;
-  padding:13px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  font-size:16px;
-  background:white;
+.subtitle {
+  text-align: center;
+  color: #786d60;
+  margin-bottom: 24px;
+  font-size: 14px;
 }
-
-.help{
-  font-size:13px;
-  color:#65747b;
-  margin:5px 0 0;
-  line-height:1.6;
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.05);
 }
-
-button{
-  width:100%;
-  padding:15px;
-  margin-top:22px;
-  border:0;
-  border-radius:12px;
-  background:#287b62;
-  color:white;
-  font-size:17px;
-  font-weight:bold;
+.question {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 8px;
 }
-
-.result{
-  margin-top:24px;
-  padding:20px;
-  background:#eaf4ee;
-  border-radius:16px;
-  text-align:center;
+.description {
+  color: #81776c;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 13px;
 }
-
-#total{
-  font-size:38px;
-  font-weight:900;
-  color:#205e49;
-  margin:10px;
-  overflow-wrap:anywhere;
+input, select {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #d9d2c8;
+  border-radius: 10px;
+  background: #fff;
+  color: #332b22;
 }
-
-.stats{
-  display:flex;
-  gap:10px;
-  margin-top:15px;
-  text-align:left;
+input::placeholder { color: #b5aca1; }
+select:invalid { color: #aaa; }
+.option-list {
+  display: grid;
+  gap: 9px;
 }
-
-.stat{
-  background:white;
-  padding:12px;
-  border-radius:10px;
-  flex:1;
-  min-width:0;
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ddd5ca;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
 }
-
-.stat b{
-  display:block;
-  margin-top:5px;
-  font-size:16px;
-  overflow-wrap:anywhere;
+.option input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #765331;
 }
-
-.conversion{
-  margin-top:18px;
-  padding:16px;
-  background:white;
-  border-radius:12px;
-  text-align:left;
+button {
+  width: 100%;
+  padding: 17px;
+  border: none;
+  border-radius: 13px;
+  background: #765331;
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 5px;
 }
-
-.conversion-item{
-  margin-top:14px;
+button:active { transform: scale(.98); }
+.secondary {
+  background: #eee8df;
+  color: #493b2c;
+  margin-top: 10px;
 }
-
-.conversion-item:first-child{
-  margin-top:0;
+.hidden { display: none; }
+.error {
+  color: #c0392b;
+  font-size: 13px;
+  margin: 10px 0;
+  font-weight: bold;
 }
-
-.conversion-item b{
-  display:block;
-  font-size:22px;
-  color:#205e49;
-  margin-top:4px;
-  overflow-wrap:anywhere;
+.result {
+  text-align: center;
+  background: #fff8e9;
+  border: 2px solid #e9d8b5;
+  border-radius: 18px;
+  padding: 22px 16px;
+  margin-top: 20px;
 }
-
-.rank{
-  text-align:center;
-  background:#fff4d8;
-  border-radius:12px;
-  padding:16px;
-  margin-top:16px;
+.result-title {
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 8px;
 }
-
-.rank b{
-  display:block;
-  font-size:25px;
-  color:#8a5a00;
-  margin-top:6px;
+.big-number {
+  font-size: 42px;
+  font-weight: 900;
+  color: #765331;
+  line-height: 1.2;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
 }
-
-.note{
-  font-size:12px;
-  color:#65747b;
-  margin-top:20px;
-  line-height:1.7;
+.unit { font-size: 16px; }
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
 }
-
+.stat {
+  background: white;
+  border-radius: 12px;
+  padding: 13px 8px;
+}
+.stat-label {
+  color: #81776c;
+  font-size: 12px;
+}
+.stat-value {
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 5px;
+}
+.rank {
+  font-size: 25px;
+  font-weight: 900;
+  margin: 15px 0 5px;
+}
+.note {
+  color: #8b8175;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  margin-top: 20px;
+}
 </style>
 </head>
 
 <body>
-<main>
+<div class="container">
 
 <h1>💩 うんぼう累計メーター</h1>
+<div class="subtitle">あなたは人生で、どれだけ出してきたのか。</div>
 
-<p>
-あなたは人生で何トンのうんぼうをシュシュってきたのか？
-身近な数字で、人生の排出量を計算してみよう‼️
-</p>
-
-<label>① 現在の年齢</label>
-<input id="age" type="number" min="1" max="120" value="26">
-
-<label>② 今の排便ペースになったのは何歳ごろ？</label>
-<input id="start" type="number" min="0" max="120" value="18">
-
-<p class="help">
-昔と今で排便頻度が変わった場合、その変化があった年齢を入力してね。<br>
-ずっと同じペースの人は、③と④で同じ頻度を選べばOK！
-</p>
-
-<label>③ それ以前の排便頻度</label>
-<select id="before">
-<option value="0.333333">3日に1回（週約2.3回）</option>
-<option value="0.5">2日に1回（週約3.5回）</option>
-<option value="1" selected>1日1回（週7回）</option>
-<option value="2">1日2回（週14回）</option>
-<option value="3">1日3回（週21回）</option>
-</select>
-
-<label>④ 今の排便頻度</label>
-<select id="after">
-<option value="7">週7回（1日1回）</option>
-<option value="10">週10回（1日約1.4回）</option>
-<option value="14">週14回（1日2回）</option>
-<option value="20" selected>週20回（1日約2.9回）</option>
-<option value="28">週28回（1日4回）</option>
-<option value="35">週35回（1日5回）</option>
-</select>
-
-<label>⑤ うんぼう1回あたりの重量</label>
-<select id="grams">
-<option value="100">100g（バナナ約1本分）</option>
-<option value="150">150g（バナナ約1.5本分）</option>
-<option value="200" selected>200g（バナナ約2本分）</option>
-<option value="250">250g（バナナ約2.5本分）</option>
-<option value="300">300g（バナナ約3本分）</option>
-</select>
-
-<p class="help">
-バナナ1本を約100gとして換算したイメージだよ🍌
-</p>
-
-<button onclick="calculate()">累計うんぼう量を計算‼️</button>
-
-<div class="result">
-
-<div>あなたの人生累計排出量</div>
-
-<div id="total">約 2.98 トン</div>
-
-<div id="range">参考幅を計算中</div>
-
-<div class="stats">
-
-<div class="stat">
-推定排便回数
-<b id="count">約14,910回</b>
+<div class="card">
+  <div class="question">① あなたは今、何歳？</div>
+  <div class="description">現在の年齢を入力してください。</div>
+  <input id="age" type="number" min="1" max="120" placeholder="例：26">
 </div>
 
-<div class="stat">
-年間排出量
-<b id="year">約1.10トン</b>
+<div class="card">
+  <div class="question">② うんぼう1回あたりの重さ</div>
+  <div class="description">1回のうんぼうはどれくらい？ バナナ1本＝約100gとして換算！</div>
+  <select id="weight">
+    <option value="">選択してください</option>
+    <option value="100">100g（バナナ約1本分）</option>
+    <option value="150">150g（バナナ約1.5本分）</option>
+    <option value="200">200g（バナナ約2本分）</option>
+    <option value="250">250g（バナナ約2.5本分）</option>
+    <option value="300">300g（バナナ約3本分）</option>
+  </select>
 </div>
 
+<div class="card">
+  <div class="question">③ 現在の排便ペース</div>
+  <div class="description">今はどれくらいの頻度で出る？</div>
+  <select id="currentFreq">
+    <option value="">選択してください</option>
+    <option value="7">週7回（1日1回）</option>
+    <option value="10">週10回（1日約1.4回）</option>
+    <option value="14">週14回（1日2回）</option>
+    <option value="20">週20回（1日約2.9回）</option>
+    <option value="28">週28回（1日4回）</option>
+    <option value="35">週35回（1日5回）</option>
+  </select>
 </div>
 
-<div class="conversion">
-
-<div class="conversion-item">
-🍌 バナナ換算
-<b id="banana">約29,800本分</b>
+<div class="card">
+  <div class="question">④ 昔と比べて、排便ペースに変化はあった？</div>
+  <div class="description">今より昔のほうが、出る回数は少なかった？</div>
+  <div class="option-list">
+    <label class="option">
+      <input type="radio" name="changed" value="yes">
+      変化あり（昔と今で違う）
+    </label>
+    <label class="option">
+      <input type="radio" name="changed" value="no">
+      変化なし（ずっと同じ）
+    </label>
+  </div>
 </div>
 
-<div class="conversion-item">
-🐘 ゾウ換算
-<b id="elephant">約0.60頭分</b>
-</div>
+<div id="pastQuestions" class="hidden">
+
+  <div class="card">
+    <div class="question">⑤ 今の排便ペースになったのは何歳ごろ？</div>
+    <div class="description">昔と今でペースが変わった年齢を入力してください。</div>
+    <input id="changeAge" type="number" min="1" placeholder="例：18">
+  </div>
+
+  <div class="card">
+    <div class="question">⑥ 昔の排便ペースは？</div>
+    <div class="description">今のペースになる前は、どれくらいの頻度だった？</div>
+    <select id="pastFreq">
+      <option value="">選択してください</option>
+      <option value="2.333333">3日に1回（週約2.3回）</option>
+      <option value="3.5">2日に1回（週約3.5回）</option>
+      <option value="7">1日1回（週7回）</option>
+      <option value="14">1日2回（週14回）</option>
+      <option value="21">1日3回（週21回）</option>
+    </select>
+  </div>
 
 </div>
 
-<div class="rank">
-🏆 あなたのうんぼう称号
-<b id="title">快便ルーキー</b>
+<div id="error" class="error"></div>
+
+<button onclick="calculate()">💩 累計うんぼうを計算する！</button>
+
+<div id="result" class="hidden">
+  <div class="result">
+    <div class="result-title">あなたの人生のうんぼう総量は…</div>
+    <div class="big-number" id="total">0</div>
+    <div class="unit">トン</div>
+
+    <div class="rank" id="rank"></div>
+    <div id="rankComment"></div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">累計排便回数</div>
+        <div class="stat-value" id="count">0回</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">バナナ換算</div>
+        <div class="stat-value" id="bananas">0本</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">ゾウ換算</div>
+        <div class="stat-value" id="elephants">0頭</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">年間排出量（現在）</div>
+        <div class="stat-value" id="yearly">0kg</div>
+      </div>
+    </div>
+
+    <button onclick="shareResult()">結果をシェアする</button>
+    <button class="secondary" onclick="resetResult()">もう一度計算する</button>
+  </div>
+</div>
+
+<div class="note">
+  ※この結果は入力値をもとにした遊びの推定値です。<br>
+  ※1回の重さは指定した値、1年は365.25日として計算しています。<br>
+  ※バナナ1本＝100g、ゾウ1頭＝約5トンとして換算しています。
 </div>
 
 </div>
-
-<button onclick="shareResult()" style="background:#34495e">
-結果をシェアする
-</button>
-
-<p class="note">
-※遊び用の概算です。排便回数や重量には個人差があります。実際の測定値ではありません。バナナ換算は1本100g、ゾウ換算は1頭5トンとして計算しています。腹痛や頻繁な下痢などが続く場合は医療機関に相談してください。
-</p>
-
-</main>
 
 <script>
+const $ = id => document.getElementById(id);
 
-function calculate(){
+document.querySelectorAll('input[name="changed"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const changed = document.querySelector('input[name="changed"]:checked').value;
+    $('pastQuestions').classList.toggle('hidden', changed !== 'yes');
+    $('error').textContent = '';
+    $('result').classList.add('hidden');
+  });
+});
 
- const ageInput=Number(document.getElementById('age').value);
- const startInput=Number(document.getElementById('start').value);
-
- if(!Number.isFinite(ageInput)||ageInput<1||ageInput>120||!Number.isInteger(ageInput)){
-   alert('現在の年齢を1〜120歳の整数で入力してね！');
-   return;
- }
-
- if(!Number.isFinite(startInput)||startInput<0||startInput>ageInput||!Number.isInteger(startInput)){
-   alert('今のペースになった年齢は、0歳〜現在の年齢で入力してね！');
-   return;
- }
-
- const age=ageInput;
- const start=startInput;
-
- const before=Number(document.getElementById('before').value);
- const after=Number(document.getElementById('after').value)/7;
- const grams=Number(document.getElementById('grams').value);
-
- const count=
-   start*365.25*before+
-   (age-start)*365.25*after;
-
- const total=count*grams/1000000;
-
- const low=count*150/1000000;
- const high=count*250/1000000;
-
- // 累計排出量
- document.getElementById('total').textContent=
-   '約 '+total.toFixed(2)+' トン';
-
- // 参考幅
- document.getElementById('range').textContent=
-   '参考幅（1回150〜250gの場合）：'+
-   low.toFixed(2)+'〜'+high.toFixed(2)+'トン';
-
- // 排便回数
- document.getElementById('count').textContent=
-   '約'+Math.round(count).toLocaleString()+'回';
-
- // 年間排出量
- document.getElementById('year').textContent=
-   '約'+(after*grams*365.25/1000000).toFixed(2)+'トン';
-
- // バナナ換算（1本100g）
- const bananaCount=Math.round(total*1000000/100);
-
- document.getElementById('banana').textContent=
-   '約'+bananaCount.toLocaleString()+'本分';
-
- // ゾウ換算（1頭5トン）
- document.getElementById('elephant').textContent=
-   '約'+(total/5).toFixed(2)+'頭分';
-
- // 称号
- let rank='うんぼう見習い';
-
- if(total>=10){
-   rank='人類の至宝';
- }else if(total>=5){
-   rank='うんぼうレジェンド';
- }else if(total>=3){
-   rank='排出マスター';
- }else if(total>=1){
-   rank='快便ルーキー';
- }
-
- document.getElementById('title').textContent=rank;
+function formatNumber(num) {
+  return Math.round(num).toLocaleString('ja-JP');
 }
 
-function shareResult(){
-
- const text=
-   '💩 うんぼう累計メーター 💩\n\n'+
-   '人生累計排出量：'+document.getElementById('total').textContent+'\n'+
-   '🍌 '+document.getElementById('banana').textContent+'\n'+
-   '🐘 '+document.getElementById('elephant').textContent+'\n'+
-   '🏆 称号：'+document.getElementById('title').textContent+'\n\n'+
-   'あなたも人生のうんぼう量を計算してみよう！';
-
- if(navigator.share){
-   navigator.share({
-     title:'うんぼう累計メーター💩',
-     text:text
-   }).catch(()=>{});
- }else if(navigator.clipboard){
-   navigator.clipboard.writeText(text)
-   .then(()=>alert('コピーしました！'))
-   .catch(()=>alert(text));
- }else{
-   alert(text);
- }
+function getRank(tonnes) {
+  if (tonnes >= 10) return ['人類の至宝', 'もはや伝説。人類の枠を超えた存在。'];
+  if (tonnes >= 5) return ['うんぼうレジェンド', 'その功績、後世に語り継がれる。'];
+  if (tonnes >= 3) return ['排出マスター', '立派な排出マスターです。'];
+  if (tonnes >= 1) return ['快便ルーキー', '着実に実績を積み上げています。'];
+  return ['うんぼう見習い', 'これからの成長に期待！'];
 }
 
-calculate();
+function calculate() {
+  $('error').textContent = '';
+  $('result').classList.add('hidden');
 
+  const age = Number($('age').value);
+  const weight = Number($('weight').value);
+  const currentFreq = Number($('currentFreq').value);
+  const changed = document.querySelector('input[name="changed"]:checked');
+
+  if (!Number.isInteger(age) || age < 1 || age > 120) {
+    $('error').textContent = '① 年齢を1〜120の整数で入力してください。';
+    return;
+  }
+  if (!weight) {
+    $('error').textContent = '② うんぼう1回あたりの重さを選択してください。';
+    return;
+  }
+  if (!currentFreq) {
+    $('error').textContent = '③ 現在の排便ペースを選択してください。';
+    return;
+  }
+  if (!changed) {
+    $('error').textContent = '④ 排便ペースに変化があったか選択してください。';
+    return;
+  }
+
+  let totalCount = 0;
+
+  if (changed.value === 'yes') {
+    const changeAge = Number($('changeAge').value);
+    const pastFreq = Number($('pastFreq').value);
+
+    if (!Number.isInteger(changeAge) || changeAge < 1 || changeAge > age) {
+      $('error').textContent = '⑤ 変化した年齢は1歳から現在の年齢までで入力してください。';
+      return;
+    }
+    if (!pastFreq) {
+      $('error').textContent = '⑥ 昔の排便ペースを選択してください。';
+      return;
+    }
+
+    const pastDays = changeAge * 365.25;
+    const currentDays = (age - changeAge) * 365.25;
+
+    totalCount =
+      (pastDays * pastFreq / 7) +
+      (currentDays * currentFreq / 7);
+
+  } else {
+    totalCount = age * 365.25 * currentFreq / 7;
+  }
+
+  const totalGrams = totalCount * weight;
+  const tonnes = totalGrams / 1000000;
+  const bananas = totalGrams / 100;
+  const elephants = tonnes / 5;
+  const yearlyKg = currentFreq * weight * 52.18 / 1000;
+
+  const [rank, comment] = getRank(tonnes);
+
+  $('total').textContent = tonnes.toFixed(2);
+  $('count').textContent = formatNumber(totalCount) + '回';
+  $('bananas').textContent = formatNumber(bananas) + '本';
+  $('elephants').textContent = elephants.toFixed(2) + '頭';
+  $('yearly').textContent = yearlyKg.toFixed(1) + 'kg';
+  $('rank').textContent = '🏆 ' + rank;
+  $('rankComment').textContent = comment;
+
+  $('result').classList.remove('hidden');
+  $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  window.lastResult =
+    `💩 うんぼう累計メーター 💩\n` +
+    `人生のうんぼう総量：${tonnes.toFixed(2)}トン！\n` +
+    `累計排便回数：約${formatNumber(totalCount)}回\n` +
+    `バナナ換算：約${formatNumber(bananas)}本\n` +
+    `ゾウ換算：約${elephants.toFixed(2)}頭\n` +
+    `称号：${rank}\n\n` +
+    `あなたも人生のうんぼう総量を計算してみよう！`;
+}
+
+async function shareResult() {
+  if (!window.lastResult) return;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'うんぼう累計メーター',
+        text: window.lastResult
+      });
+    } catch (e) {}
+  } else {
+    try {
+      await navigator.clipboard.writeText(window.lastResult);
+      alert('結果をコピーしました！');
+    } catch (e) {
+      alert('シェアに対応していないブラウザです。');
+    }
+  }
+}
+
+function resetResult() {
+  $('result').classList.add('hidden');
+  $('error').textContent = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
-
 </body>
 </html>
