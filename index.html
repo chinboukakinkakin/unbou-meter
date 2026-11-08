@@ -1,0 +1,191 @@
+
+
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>うんぼう累計メーター 💩</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;padding:20px;background:#f4f1e9;color:#263238;font-family:system-ui,sans-serif}
+
+main{max-width:600px;margin:auto;background:#fffdf8;padding:24px;border-radius:22px}
+
+h1{text-align:center;font-size:27px}
+
+p{line-height:1.7}
+
+label{display:block;font-weight:bold;margin:18px 0 7px}
+
+input,select{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;font-size:16px;background:white}
+
+button{width:100%;padding:15px;margin-top:22px;border:0;border-radius:12px;background:#287b62;color:white;font-size:17px;font-weight:bold}
+
+.result{margin-top:24px;padding:20px;background:#eaf4ee;border-radius:16px;text-align:center}
+
+#total{font-size:38px;font-weight:900;color:#205e49;margin:10px}
+
+.stats{display:flex;gap:10px;margin-top:15px;text-align:left}
+
+.stat{background:white;padding:12px;border-radius:10px;flex:1}
+
+.stat b{display:block;margin-top:5px}
+
+.note{font-size:12px;color:#65747b;margin-top:20px}
+
+</style>
+
+</head>
+
+<body>
+
+<main>
+
+<h1>💩 うんぼう累計メーター</h1>
+
+<p>あなたは人生で何トンのうんぼうをシュシュってきたのか？計算してみよう‼️</p>
+
+<label>現在の年齢</label>
+
+<input id="age" type="number" min="1" max="120" value="26">
+
+<label>排便ペースが増えた年齢</label>
+
+<input id="start" type="number" min="0" max="120" value="18">
+
+<label>それ以前の排便頻度</label>
+
+<select id="before">
+
+<option value="0.33">3日に1回</option>
+
+<option value="0.5">2日に1回</option>
+
+<option value="1" selected>1日1回</option>
+
+<option value="2">1日2回</option>
+
+<option value="3">1日3回</option>
+
+</select>
+
+<label>それ以降の排便頻度</label>
+
+<select id="after">
+
+<option value="7">週7回</option>
+
+<option value="10">週10回</option>
+
+<option value="14">週14回</option>
+
+<option value="20" selected>週20回</option>
+
+<option value="28">週28回</option>
+
+<option value="35">週35回</option>
+
+</select>
+
+<label>1回あたりの重量</label>
+
+<select id="grams">
+
+<option value="100">100g</option>
+
+<option value="150">150g</option>
+
+<option value="200" selected>200g</option>
+
+<option value="250">250g</option>
+
+<option value="300">300g</option>
+
+</select>
+
+<button onclick="calculate()">累計うんぼう量を計算‼️</button>
+
+<div class="result">
+
+<div>あなたの人生累計排出量</div>
+
+<div id="total">約 2.98 トン</div>
+
+<div id="range">参考幅を計算中</div>
+
+<div class="stats">
+
+<div class="stat">推定排便回数<b id="count">約14,910回</b></div>
+
+<div class="stat">年間排出量<b id="year">約1.10トン</b></div>
+
+</div>
+
+</div>
+
+<button onclick="shareResult()" style="background:#34495e">結果をシェアする</button>
+
+<p class="note">※遊び用の概算です。排便回数や重量には個人差があります。実際の測定値ではありません。腹痛や頻繁な下痢などが続く場合は医療機関に相談してください。</p>
+
+</main>
+
+<script>
+
+function calculate(){
+
+ const age=Math.max(1,Math.min(120,Number(document.getElementById('age').value)||1));
+
+ const start=Math.max(0,Math.min(age,Number(document.getElementById('start').value)||0));
+
+ const before=Number(document.getElementById('before').value);
+
+ const after=Number(document.getElementById('after').value)/7;
+
+ const grams=Number(document.getElementById('grams').value);
+
+ const count=start*365.25*before+(age-start)*365.25*after;
+
+ const total=count*grams/1000000;
+
+ const low=count*150/1000000;
+
+ const high=count*250/1000000;
+
+ document.getElementById('total').textContent='約 '+total.toFixed(2)+' トン';
+
+ document.getElementById('range').textContent='参考幅：'+low.toFixed(2)+'〜'+high.toFixed(2)+'トン';
+
+ document.getElementById('count').textContent='約'+Math.round(count).toLocaleString()+'回';
+
+ document.getElementById('year').textContent='約'+(after*grams*365.25/1000000).toFixed(2)+'トン';
+
+}
+
+function shareResult(){
+
+ const text='うんぼう累計メーターで計算したら、人生累計 '+document.getElementById('total').textContent+' だった‼️💩';
+
+ if(navigator.share){navigator.share({title:'うんぼう累計メーター',text:text}).catch(()=>{});}
+
+ else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('コピーしました！'));}
+
+ else{alert(text);}
+
+}
+
+calculate();
+
+</script>
+
+</body>
+
+</html>
